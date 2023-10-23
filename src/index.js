@@ -1,4 +1,16 @@
+import getData from "./api/getData"
+
+const URL_DB = 'https://patryk--sandbox-default-rtdb.europe-west1.firebasedatabase.app/.json'
+
 let mainContainer = null
+let isLoading = true
+let tasks = []
+let hasError = null
+
+const loadTasks = async () => {
+    const data = await getData(URL_DB)
+    return console.log(data)
+}
 
 const update = () => {
 
@@ -26,6 +38,8 @@ const init = (containerSelector = '#root') => {
     }
 
     mainContainer = container
+
+    loadTasks()
 
     const app = render()
 
