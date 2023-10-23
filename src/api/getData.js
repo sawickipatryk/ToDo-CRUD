@@ -1,10 +1,10 @@
 import objectToArray from './objectToArray'
 
-export const getData = (url) => {
+export const getData = async (url) => {
 
-    return fetch(url)
-        .then((response) => response.json())
-        .then((data) => objectToArray(data))
+    const response = await fetch(url)
+    const data = await response.json()
+    return objectToArray(data, 'key')
 
 }
 export default getData
