@@ -15,6 +15,7 @@ let isNewNameInputTaskFocused = false
 
 let searchPhrases = ''
 let isSearchInputFocused = false
+
 let sort = 'NONE'
 let filter = 'ALL'
 
@@ -38,13 +39,20 @@ const loadTasks = async () => {
         update()
     }
 }
+const onChangeNewTaskInput = (e) => {
+    isNewNameInputTaskFocused = true
+    isSearchInputFocused = false
+    newNameToTask = e.target.value
+    console.log(newNameToTask)
+}
 
 const renderForm = () => {
 
     const form = document.createElement('form')
+    form.className = 'todo-list__form'
 
-    const formButton = Button('ADD', 'todo-list__button--form')
-    const formInput = Input('Type your task', 'todo-list__button--form')
+    const formButton = Button('ADD', null, 'todo-list__button-add')
+    const formInput = Input('Type your task', onChangeNewTaskInput, newNameToTask, 'todo-list__new-task-input')
 
     form.appendChild(formInput)
     form.appendChild(formButton)
@@ -56,7 +64,7 @@ const renderForm = () => {
 const renderTask = (task) => {
 
     const li = document.createElement('li')
-    li.className = 'todo-list__task'
+    li.className = 'todo-list__item-task'
 
     const innerText = document.createTextNode(task.name)
 
@@ -97,8 +105,20 @@ const render = () => {
     const container = document.createElement('div')
     container.className = 'todo-list__wrapper'
 
+    const headerContainer = document.createElement('div')
+    headerContainer.className = 'todo-list__header-containe'
+
+    const header = document.createElement('h1')
+    header.className = 'todo-list__header'
+    header.innerText = 'ToDo'
+
+
+    const formElement = renderForm()
     const tasksElement = renderTasks(tasks)
 
+    headerContainer.appendChild(header)
+    container.appendChild(headerContainer)
+    container.appendChild(formElement)
     container.appendChild(tasksElement)
 
 
