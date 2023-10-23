@@ -1,4 +1,5 @@
 import getData from "./api/getData"
+import create from './api/create'
 import Loader from "./components/Loader"
 import Button from './components/Button'
 import Input from './components/Input'
@@ -24,20 +25,23 @@ const appendArray = (array, container) => {
         container.appendChild(element)
     })
 }
-
-const loadTasks = async () => {
+const handleAsyncAction = async (asyncAction) => {
     isLoading = true
-    hasError = false
     try {
-        const data = await getData(URL_DB)
-        tasks = data
+        await asyncAction()
     } catch (error) {
         hasError = true
-        console.error(error)
     } finally {
         isLoading = false
         update()
     }
+}
+
+const loadTasks = async () => {
+    handleAsyncAction(async () => {
+        tasks = await getData(URL_DB)
+        console.log(tasks)
+    })
 }
 const onChangeNewTaskInput = (e) => {
     isNewNameInputTaskFocused = true
@@ -45,14 +49,46 @@ const onChangeNewTaskInput = (e) => {
     newNameToTask = e.target.value
     console.log(newNameToTask)
 }
+const addNewTask = (newNameTask) => {
+
+    if (!newNameTask) return
+
+    const newTask = {
+        name: newNameTask,
+        isCompleted: false,
+    }
+
+    newNameToTask = ''
+
+    return handleAsyncAction(async () => {
+        await create(URL_DB, newTask)
+        await loadTasks()
+    })
+
+
+}
 
 const renderForm = () => {
 
     const form = document.createElement('form')
     form.className = 'todo-list__form'
 
-    const formButton = Button('ADD', null, 'todo-list__button-add')
-    const formInput = Input('Type your task', onChangeNewTaskInput, newNameToTask, 'todo-list__new-task-input')
+    form.addEventListener('submit', (e) => {
+        e.preventDefault()
+        addNewTask(newNameToTask)
+    })
+
+    const formButton = Button(
+        'ADD',
+        null,
+        'todo-list__button-add'
+    )
+    const formInput = Input(
+        'Type your task',
+        onChangeNewTaskInput,
+        newNameToTask,
+        'todo-list__new-task-input'
+    )
 
     form.appendChild(formInput)
     form.appendChild(formButton)
@@ -93,10 +129,15 @@ const renderTasks = (tasks) => {
 const update = () => {
 
     mainContainer.innerHTML = ''
+    const loading = Loader()
 
     const app = render()
 
-    mainContainer.appendChild(app)
+    if (isLoading) {
+        mainContainer.appendChild(loading)
+    } else {
+        mainContainer.appendChild(app)
+    }
 
 }
 
@@ -126,23 +167,26 @@ const render = () => {
 
 }
 const init = (containerSelector = '#root') => {
+
     const container = document.querySelector(containerSelector)
     const loading = Loader()
+
 
     if (!container) {
         console.error('Type correct container')
     }
-    if (isLoading) {
-        container.appendChild(loading)
-    }
 
     mainContainer = container
+
     loadTasks()
 
     const app = render()
 
-    app.appendChild(loading)
-    container.appendChild(app)
+    if (isLoading) {
+        container.appendChild(loading)
+    } else {
+        container.appendChild(app)
+    }
 
 }
 init()
