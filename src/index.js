@@ -1,5 +1,7 @@
 import getData from "./api/getData"
 import Loader from "./components/Loader"
+import Button from './components/Button'
+import Input from './components/Input'
 
 const URL_DB = 'https://patryk--sandbox-default-rtdb.europe-west1.firebasedatabase.app/.json'
 
@@ -7,6 +9,14 @@ let mainContainer = null
 let isLoading = true
 let tasks = []
 let hasError = null
+
+let newNameToTask = ''
+let isNewNameInputTaskFocused = false
+
+let searchPhrases = ''
+let isSearchInputFocused = false
+let sort = 'NONE'
+let filter = 'ALL'
 
 const appendArray = (array, container) => {
     array.forEach((element) => {
@@ -32,6 +42,12 @@ const loadTasks = async () => {
 const renderForm = () => {
 
     const form = document.createElement('form')
+
+    const formButton = Button('ADD', 'todo-list__button--form')
+    const formInput = Input('Type your task', 'todo-list__button--form')
+
+    form.appendChild(formInput)
+    form.appendChild(formButton)
 
     return form
 
