@@ -1,5 +1,6 @@
 import getData from "./api/getData"
 import create from './api/create'
+import updateTask from './api/updateTask'
 import Loader from "./components/Loader"
 import Button from './components/Button'
 import Input from './components/Input'
@@ -38,16 +39,10 @@ const handleAsyncAction = async (asyncAction) => {
 }
 
 const loadTasks = async () => {
-    handleAsyncAction(async () => {
+    return handleAsyncAction(async () => {
         tasks = await getData(URL_DB)
         console.log(tasks)
     })
-}
-const onChangeNewTaskInput = (e) => {
-    isNewNameInputTaskFocused = true
-    isSearchInputFocused = false
-    newNameToTask = e.target.value
-    console.log(newNameToTask)
 }
 const addNewTask = (newNameTask) => {
 
@@ -67,6 +62,27 @@ const addNewTask = (newNameTask) => {
 
 
 }
+const onToggleTask = (task) => {
+    const taskKey = task.key
+    console.log(taskKey)
+    const dataToUpdate = {
+        isCompleted: !task.isCompleted
+    }
+    console.log(task.isCompleted)
+
+    return handleAsyncAction(async () => {
+        await updateTask(taskKey, dataToUpdate)
+        await loadTasks()
+    })
+}
+
+const onChangeNewTaskInput = (e) => {
+    isNewNameInputTaskFocused = true
+    isSearchInputFocused = false
+    newNameToTask = e.target.value
+    console.log(newNameToTask)
+}
+
 
 const renderForm = () => {
 
@@ -97,15 +113,27 @@ const renderForm = () => {
 
 }
 
-const renderTask = (task) => {
+const renderTask = (task, onClick) => {
 
     const li = document.createElement('li')
+    const wrapper = document.createElement('div')
+    const textContainer = document.createElement('div')
+
     li.className = 'todo-list__item-task'
+    wrapper.className = 'todo-list__item-task-wrapper'
+    textContainer.className = 'todo-list__list-item-text-container'
 
-    const innerText = document.createTextNode(task.name)
+    const text = document.createTextNode(task.name)
 
+    if (task.isCompleted) {
+        textContainer.className = `${textContainer.className} todo-list__item-task--completed`
+    }
 
-    li.appendChild(innerText)
+    li.addEventListener('click', onClick)
+
+    textContainer.appendChild(text)
+    wrapper.appendChild(textContainer)
+    li.appendChild(wrapper)
 
     return li
 
@@ -117,7 +145,11 @@ const renderTasks = (tasks) => {
     container.className = 'todo-list__tasks-container'
 
     tasks = tasks.map((task) => {
-        return renderTask(task)
+        return renderTask(
+            task,
+            () => { onToggleTask(task) }
+        )
+
     })
 
     appendArray(tasks, container)
