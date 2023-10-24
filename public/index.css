@@ -45,13 +45,6 @@
 .todo-list__new-task-input{
   border-radius: 10px 0px 0px 10px;
 }
-.todo-list__search-input--container{
-  width: 100%;
-}
-.todo-list__search-input{
-  width: 100%;
-  border-radius: 10px;
-}
 .todo-list__button{
   padding: 0.2rem 1rem;
   font-size: 0.8rem;
@@ -95,22 +88,6 @@
 .todo-list__list-item-text-container.todo-list__item-task--completed{
   text-decoration: line-through;
   color:#737373;
-}
-.todo-list__filters-container,
-.todo-list__sort-container{
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  width: 100%;
-  margin-bottom: 15px;
-}
-.todo-list__button.todo-list__button--filter.todo-list__button--filter-active,
-.todo-list__button.todo-list__button--sort.todo-list__button--sort-active{
-  background-color: #f1a524;
-}
-.todo-list__button.todo-list__button.todo-list__button--sort,
-.todo-list__button.todo-list__button.todo-list__button--filter{
-width: 30%;
 }
 @media screen and (min-width: 900px) {
   .todo-list__button{    
