@@ -1,6 +1,8 @@
 import getData from "./api/getData"
 import create from './api/create'
 import updateTask from './api/updateTask'
+import deleteTask from './api/deleteTask'
+
 import Loader from "./components/Loader"
 import Button from './components/Button'
 import Input from './components/Input'
@@ -64,16 +66,25 @@ const addNewTask = (newNameTask) => {
 }
 const onToggleTask = (task) => {
     const taskKey = task.key
-    console.log(taskKey)
     const dataToUpdate = {
         isCompleted: !task.isCompleted
     }
-    console.log(task.isCompleted)
 
     return handleAsyncAction(async () => {
         await updateTask(taskKey, dataToUpdate)
         await loadTasks()
     })
+}
+const onDeleteTak = (task) => {
+
+    const taskKey = task.key
+    console.log(taskKey)
+
+    return handleAsyncAction(async () => {
+        await deleteTask(taskKey)
+        await loadTasks()
+    })
+
 }
 
 const onChangeNewTaskInput = (e) => {
@@ -113,11 +124,12 @@ const renderForm = () => {
 
 }
 
-const renderTask = (task, onClick) => {
+const renderTask = (task, onToggle, onDelete) => {
 
     const li = document.createElement('li')
     const wrapper = document.createElement('div')
     const textContainer = document.createElement('div')
+    const deleteButton = Button('X', onDelete, 'todo-list__button-delete')
 
     li.className = 'todo-list__item-task'
     wrapper.className = 'todo-list__item-task-wrapper'
@@ -129,10 +141,12 @@ const renderTask = (task, onClick) => {
         textContainer.className = `${textContainer.className} todo-list__item-task--completed`
     }
 
-    li.addEventListener('click', onClick)
+    textContainer.addEventListener('click', onToggle)
+    deleteButton.addEventListener('click', onDelete)
 
     textContainer.appendChild(text)
     wrapper.appendChild(textContainer)
+    wrapper.appendChild(deleteButton)
     li.appendChild(wrapper)
 
     return li
@@ -147,7 +161,8 @@ const renderTasks = (tasks) => {
     tasks = tasks.map((task) => {
         return renderTask(
             task,
-            () => { onToggleTask(task) }
+            () => { onToggleTask(task) },
+            () => { onDeleteTak(task) },
         )
 
     })
