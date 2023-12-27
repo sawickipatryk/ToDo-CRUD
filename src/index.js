@@ -7,7 +7,7 @@ import Loader from "./components/Loader"
 import Button from './components/Button'
 import Input from './components/Input'
 
-const URL_DB = 'https://patryk--sandbox-default-rtdb.europe-west1.firebasedatabase.app/.json'
+const URL_DB = 'https://todo-crud-6744c-default-rtdb.firebaseio.com/.json'
 
 let mainContainer = null
 let isLoading = true

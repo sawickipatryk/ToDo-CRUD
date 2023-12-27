@@ -1,3 +1,3 @@
-export const makeApiUrl = (key) => `https://patryk--sandbox-default-rtdb.europe-west1.firebasedatabase.app/${key}/.json`
+export const makeApiUrl = (key) => `https://todo-crud-6744c-default-rtdb.firebaseio.com/${key}/.json`
 
 export default makeApiUrl
